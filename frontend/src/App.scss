@@ -1,0 +1,261 @@
+// Responsive Design Variables
+:root {
+  --mobile-breakpoint: 576px;
+  --tablet-breakpoint: 768px;
+  --laptop-breakpoint: 1024px;
+  --desktop-breakpoint: 1440px;
+
+  --content-max-width: 600px;
+  --sidebar-width: 200px;
+  --header-height: 64px;
+}
+
+.sider-logo {
+  height: 32px;
+  margin: 16px;
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  font-weight: bold;
+
+  // Mobile: smaller logo
+  @media (max-width: 576px) {
+    font-size: 16px;
+    margin: 12px;
+    height: 28px;
+  }
+}
+
+.site-header {
+  background: #001529;
+  padding: 0 12px;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  // Mobile: more compact header
+  @media (max-width: 576px) {
+    padding: 0 8px;
+    height: 56px;
+
+    // Update CSS variable for mobile
+    --header-height: 56px;
+
+    h1 {
+      font-size: 16px !important;
+      margin: 0 !important;
+    }
+
+    .user-section {
+      span {
+        display: none; // Hide "Hello, Username" on mobile
+      }
+
+      button {
+        padding: 4px 8px !important;
+        font-size: 12px;
+      }
+    }
+  }
+
+  // Tablet: medium spacing
+  @media (min-width: 577px) and (max-width: 768px) {
+    padding: 0 16px;
+
+    h1 {
+      font-size: 18px !important;
+    }
+  }
+
+  // Desktop: full spacing
+  @media (min-width: 769px) {
+    padding: 0 20px;
+  }
+}
+
+.site-content {
+  margin: 4px;
+  padding: 8px;
+  background: #fff;
+  min-height: calc(100vh - var(--header-height) - 70px);
+  overflow-x: auto;
+  margin-top: calc(var(--header-height) + 4px);
+
+  // Mobile: minimal padding
+  @media (max-width: 576px) {
+    margin: 4px;
+    padding: 8px;
+  }
+
+  // Tablet: medium padding
+  @media (min-width: 577px) and (max-width: 768px) {
+    margin: 8px;
+    padding: 12px;
+  }
+
+  // Laptop: standard padding
+  @media (min-width: 769px) and (max-width: 1024px) {
+    margin: 12px;
+    padding: 16px;
+  }
+
+  // Desktop: full padding
+  @media (min-width: 1025px) {
+    margin: 16px;
+    padding: 24px;
+  }
+
+  .content-box {
+    text-align: center;
+
+    h2 {
+      margin-bottom: 20px;
+
+      // Responsive heading sizes
+      @media (max-width: 576px) {
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+
+      @media (min-width: 577px) and (max-width: 768px) {
+        font-size: 20px;
+        margin-bottom: 16px;
+      }
+    }
+  }
+}
+
+// Global responsive utilities
+.responsive-card {
+  width: 100%;
+  margin: 8px auto;
+
+  // Mobile: full width with minimal margins
+  @media (max-width: 576px) {
+    max-width: calc(100vw - 16px);
+    margin: 8px auto;
+  }
+
+  // Tablet: slightly constrained
+  @media (min-width: 577px) and (max-width: 768px) {
+    max-width: min(95vw, 500px);
+    margin: 12px auto;
+  }
+
+  // Laptop: standard constraint
+  @media (min-width: 769px) and (max-width: 1024px) {
+    max-width: min(90vw, 600px);
+    margin: 16px auto;
+  }
+
+  // Desktop: max constraint
+  @media (min-width: 1025px) {
+    max-width: min(80vw, 700px);
+    margin: 20px auto;
+  }
+}
+
+// Responsive spacing utilities
+.responsive-padding {
+  @media (max-width: 576px) {
+    padding: 12px !important;
+  }
+
+  @media (min-width: 577px) and (max-width: 768px) {
+    padding: 16px !important;
+  }
+
+  @media (min-width: 769px) {
+    padding: 24px !important;
+  }
+}
+
+// Mobile-first responsive text
+.responsive-text {
+  line-height: 1.5;
+
+  @media (max-width: 576px) {
+    font-size: 14px;
+  }
+
+  @media (min-width: 577px) and (max-width: 768px) {
+    font-size: 15px;
+  }
+
+  @media (min-width: 769px) {
+    font-size: 16px;
+  }
+}
+
+// Responsive button styling
+.responsive-button {
+  @media (max-width: 576px) {
+    width: 100% !important;
+    margin: 8px 0 !important;
+  }
+
+  @media (min-width: 577px) and (max-width: 768px) {
+    min-width: 120px;
+    margin: 4px;
+  }
+}
+
+// Layout adjustments for sidebar
+.ant-layout-sider {
+  &.ant-layout-sider-dark {
+    background: #001529;
+  }
+
+  // Account for fixed header
+  top: var(--header-height) !important;
+  height: calc(100vh - var(--header-height)) !important;
+}
+
+// Ensure proper layout spacing
+.ant-layout-content {
+  position: relative;
+  background: #f0f2f5;
+}
+
+// Mobile drawer improvements
+.ant-drawer-content-wrapper {
+  .ant-drawer-body {
+    padding: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .ant-layout-sider {
+    position: fixed !important;
+    height: 100vh;
+    z-index: 999;
+  }
+
+  .ant-layout-sider-collapsed {
+    margin-left: -200px;
+  }
+}
+
+// Responsive QR code
+.responsive-qr {
+  @media (max-width: 576px) {
+    width: min(180px, 70vw) !important;
+    height: min(180px, 70vw) !important;
+  }
+
+  @media (min-width: 577px) and (max-width: 768px) {
+    width: min(200px, 60vw) !important;
+    height: min(200px, 60vw) !important;
+  }
+
+  @media (min-width: 769px) {
+    width: 200px !important;
+    height: 200px !important;
+  }
+}
