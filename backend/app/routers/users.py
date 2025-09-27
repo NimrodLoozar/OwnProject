@@ -19,8 +19,8 @@ def read_users(
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """Get list of users (only for superusers)"""
-    if not current_user.is_superuser:
+    """Get list of users (only for admin users)"""
+    if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions"
@@ -35,8 +35,8 @@ def read_user(
     db: Session = Depends(get_db)
 ):
     """Get specific user by ID"""
-    # Users can only access their own info unless they're superuser
-    if current_user.id != user_id and not current_user.is_superuser:
+    # Users can only access their own info unless they're admin
+    if current_user.id != user_id and not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions"
