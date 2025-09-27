@@ -20,6 +20,7 @@ class User(UserBase):
     role: str
     is_active: bool
     is_superuser: bool
+    is_admin: bool
     profile_picture: Optional[str] = None
     theme_preference: str
     created_at: datetime
