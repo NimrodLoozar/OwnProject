@@ -16,7 +16,9 @@ import Dashboard from "./pages/Dashboard";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import DeletedUserPage from "./pages/DeletedUserPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import "./App.scss";
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -241,9 +243,13 @@ const AppContent = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <ThemeProvider>
+          <AppContent />
+        </ThemeProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

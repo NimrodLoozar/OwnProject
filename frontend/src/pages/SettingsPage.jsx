@@ -19,8 +19,11 @@ import {
   LockOutlined,
   SafetyOutlined,
   UserOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "../contexts/AuthContext";
+import { useTheme } from "../contexts/ThemeContext";
+import ThemeSelector from "../components/ThemeSelector";
 
 const { Title, Text } = Typography;
 
@@ -32,7 +35,8 @@ function SettingsPage() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
   const [twoFAEnabled, setTwoFAEnabled] = useState(false);
-  const { user, apiCall } = useAuth();
+  const { user, apiCall, refreshUser } = useAuth();
+  const { themeMode, isDarkMode } = useTheme();
 
   // Avatar upload functions
   const getBase64 = (img, callback) => {
@@ -53,18 +57,45 @@ function SettingsPage() {
     return isJpgOrPng && isLt2M;
   };
 
-  const handleAvatarChange = (info) => {
+  const handleAvatarChange = async (info) => {
     if (info.file.status === "uploading") {
       setUploadLoading(true);
       return;
     }
     if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (url) => {
+      try {
+        const formData = new FormData();
+        formData.append("file", info.file.originFileObj);
+        
+        const response = await apiCall("/users/me/profile-picture", "POST", formData);
+        
+        // Update image URL with backend response
+        const profilePictureUrl = `http://localhost:8000${response.profile_picture}`;
+        setImageUrl(profilePictureUrl);
         setUploadLoading(false);
-        setImageUrl(url);
-        message.success("Avatar updated successfully!");
-      });
+        message.success("Profile picture updated successfully!");
+        
+        // Refresh user data to get the updated profile picture
+        window.location.reload(); // Simple approach to refresh user data
+      } catch (error) {
+        setUploadLoading(false);
+        console.error("Failed to upload profile picture:", error);
+        message.error("Failed to upload profile picture");
+      }
+    } else if (info.file.status === "error") {
+      setUploadLoading(false);
+      message.error("Upload failed");
+    }
+  };
+
+  const handleDeleteProfilePicture = async () => {
+    try {
+      await apiCall("/users/me/profile-picture", "DELETE");
+      setImageUrl(null);
+      message.success("Profile picture deleted successfully!");
+    } catch (error) {
+      console.error("Failed to delete profile picture:", error);
+      message.error("Failed to delete profile picture");
     }
   };
 
@@ -79,10 +110,12 @@ function SettingsPage() {
         form.setFieldsValue({
           username: user.username,
           email: user.email,
-          darkmode: false, // Default value for now
         });
         // Load user avatar if exists
-        setImageUrl(user.avatar || null);
+        const profilePictureUrl = user.profile_picture 
+          ? `${import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:8000'}${user.profile_picture}` 
+          : null;
+        setImageUrl(profilePictureUrl);
         setTwoFAEnabled(user.twoFactorEnabled || false);
       }
     } catch (error) {
@@ -191,9 +224,31 @@ function SettingsPage() {
               listType="picture-circle"
               className="avatar-uploader"
               showUploadList={false}
-              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+              customRequest={async ({ file, onSuccess, onError }) => {
+                try {
+                  setUploadLoading(true);
+                  const formData = new FormData();
+                  formData.append("file", file);
+                  
+                  const response = await apiCall("/users/me/profile-picture", "POST", formData);
+                  
+                  // Update image URL with backend response
+                  const profilePictureUrl = `${import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:8000'}${response.profile_picture}`;
+                  setImageUrl(profilePictureUrl);
+                  setUploadLoading(false);
+                  message.success("Profile picture updated successfully!");
+                  
+                  // Refresh user data to get the updated profile picture
+                  await refreshUser();
+                  onSuccess();
+                } catch (error) {
+                  setUploadLoading(false);
+                  console.error("Failed to upload profile picture:", error);
+                  message.error("Failed to upload profile picture");
+                  onError(error);
+                }
+              }}
               beforeUpload={beforeUpload}
-              onChange={handleAvatarChange}
             >
               {imageUrl ? (
                 <img
@@ -212,6 +267,18 @@ function SettingsPage() {
             >
               JPG/PNG, max 2MB
             </Text>
+            {imageUrl && (
+              <Button 
+                type="text" 
+                danger 
+                size="small"
+                icon={<DeleteOutlined />}
+                onClick={handleDeleteProfilePicture}
+                style={{ marginTop: "8px" }}
+              >
+                Remove
+              </Button>
+            )}
           </div>
 
           {/* Basic Info Form */}
@@ -256,11 +323,14 @@ function SettingsPage() {
               </Form.Item>
 
               <Form.Item
-                label="Dark Mode"
-                name="darkmode"
-                valuePropName="checked"
+                label="Theme Preference"
               >
-                <Switch />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <ThemeSelector size="default" showLabels={true} />
+                  <Text type="secondary" style={{ fontSize: '12px' }}>
+                    Choose your preferred theme or follow system settings
+                  </Text>
+                </div>
               </Form.Item>
 
               <Form.Item>

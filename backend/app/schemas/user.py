@@ -20,6 +20,8 @@ class User(UserBase):
     role: str
     is_active: bool
     is_superuser: bool
+    profile_picture: Optional[str] = None
+    theme_preference: str
     created_at: datetime
     
     class Config:
@@ -52,3 +54,11 @@ class UserData(UserDataBase):
     
     class Config:
         from_attributes = True
+
+# Profile update schemas
+class UserProfileUpdate(BaseModel):
+    theme_preference: Optional[str] = Field(None, pattern="^(light|dark|system)$")
+
+class ProfilePictureResponse(BaseModel):
+    profile_picture: str
+    message: str

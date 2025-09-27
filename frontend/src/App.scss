@@ -8,6 +8,97 @@
   --content-max-width: 600px;
   --sidebar-width: 200px;
   --header-height: 64px;
+
+  // Light theme colors
+  --bg-primary: #ffffff;
+  --bg-secondary: #f0f2f5;
+  --bg-elevated: #ffffff;
+  --text-primary: rgba(0, 0, 0, 0.85);
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --border-color: #d9d9d9;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+// Dark theme
+[data-theme="dark"] {
+  --bg-primary: #141414;
+  --bg-secondary: #000000;
+  --bg-elevated: #1f1f1f;
+  --text-primary: rgba(255, 255, 255, 0.85);
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --border-color: #303030;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+// Apply theme colors to body
+body {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// Dark theme overrides for layout components
+[data-theme="dark"] {
+  .ant-layout {
+    background-color: var(--bg-secondary);
+  }
+  
+  .ant-layout-content {
+    background: var(--bg-secondary);
+  }
+  
+  .site-content {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+  }
+  
+  // Card dark theme
+  .ant-card {
+    background: var(--bg-elevated);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+    
+    .ant-card-head {
+      background: var(--bg-elevated);
+      border-color: var(--border-color);
+      color: var(--text-primary);
+    }
+  }
+  
+  // Form dark theme
+  .ant-form-item-label > label {
+    color: var(--text-primary);
+  }
+  
+  // Input dark theme
+  .ant-input, .ant-input-password {
+    background-color: var(--bg-elevated);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+    
+    &:focus, &:hover {
+      border-color: #1890ff;
+    }
+  }
+  
+  // Upload dark theme
+  .ant-upload.ant-upload-select {
+    background-color: var(--bg-elevated);
+    border-color: var(--border-color);
+    
+    &:hover {
+      border-color: #1890ff;
+    }
+  }
+  
+  // Switch dark theme
+  .ant-switch {
+    background-color: #424242;
+    
+    &.ant-switch-checked {
+      background-color: #1890ff;
+    }
+  }
 }
 
 .sider-logo {

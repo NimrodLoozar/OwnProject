@@ -3,8 +3,8 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 // Create the authentication context
 const AuthContext = createContext();
 
-// API base URL
-const API_BASE_URL = "http://localhost:8000/api";
+// API base URL from environment variables
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
 
 // Custom hook to use the auth context
 export const useAuth = () => {
@@ -183,24 +183,67 @@ export const AuthProvider = ({ children }) => {
     return user && user.role === "owner";
   };
 
+  // Refresh user data
+  const refreshUser = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      if (token) {
+        const response = await fetch(`${API_BASE_URL}/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+          return userData;
+        }
+      }
+    } catch (error) {
+      console.error("Failed to refresh user data:", error);
+    }
+    return null;
+  };
+
   // API call helper with authentication
-  const apiCall = async (endpoint, options = {}) => {
+  const apiCall = async (endpoint, method = 'GET', body = null, customHeaders = {}) => {
     const token = localStorage.getItem("access_token");
-    const defaultHeaders = {
-      "Content-Type": "application/json",
-    };
+    const defaultHeaders = {};
 
     if (token) {
       defaultHeaders.Authorization = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      ...options,
+    // Only add Content-Type for non-FormData bodies
+    if (body && !(body instanceof FormData)) {
+      defaultHeaders["Content-Type"] = "application/json";
+    }
+
+    const config = {
+      method,
       headers: {
         ...defaultHeaders,
-        ...options.headers,
+        ...customHeaders,
       },
-    });
+    };
+
+    // Don't override Content-Type for FormData - browser sets it automatically
+    if (body instanceof FormData && customHeaders["Content-Type"]) {
+      delete config.headers["Content-Type"];
+    }
+
+    if (body) {
+      if (body instanceof FormData) {
+        config.body = body;
+      } else if (typeof body === 'object') {
+        config.body = JSON.stringify(body);
+      } else {
+        config.body = body;
+      }
+    }
+
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
     if (response.status === 401) {
       // Token expired or invalid
@@ -208,6 +251,16 @@ export const AuthProvider = ({ children }) => {
       throw new Error("Authentication expired. Please login again.");
     }
 
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ detail: 'Request failed' }));
+      throw new Error(errorData.detail || `Request failed with status ${response.status}`);
+    }
+
+    // Return parsed JSON if response has content, otherwise return response
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      return await response.json();
+    }
     return response;
   };
 
@@ -222,6 +275,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     apiCall,
     checkUserExists,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

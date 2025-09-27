@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+from pathlib import Path
 from .config import settings
 from .database import engine, Base, get_db
 from .routers import auth, users, protected, admin
@@ -63,6 +65,13 @@ app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
 app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(protected.router, prefix="/api", tags=["protected"])
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
+
+# Create uploads directory and mount static files
+uploads_dir = Path("uploads")
+uploads_dir.mkdir(exist_ok=True)
+(uploads_dir / "profile_pictures").mkdir(exist_ok=True)
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 @app.get("/")
 async def root():
