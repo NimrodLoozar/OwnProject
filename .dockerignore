@@ -1,0 +1,39 @@
+# Root .dockerignore for multi-stage builds
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+.tmp/
+tmp/

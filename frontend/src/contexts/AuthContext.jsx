@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 const AuthContext = createContext();
 
 // API base URL
-const API_BASE_URL = "http://192.168.1.92:8000/api";
+const API_BASE_URL = "http://localhost:8000/api";
 
 // Custom hook to use the auth context
 export const useAuth = () => {
