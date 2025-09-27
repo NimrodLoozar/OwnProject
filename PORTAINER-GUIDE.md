@@ -81,7 +81,7 @@ services:
       ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - ./backend/uploads:/app/uploads
       - ./backend/data:/app/data
