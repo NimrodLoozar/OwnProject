@@ -60,21 +60,14 @@ const AdminUsersPage = () => {
 
     try {
       setDeleteLoading((prev) => ({ ...prev, [userId]: true }));
-      const response = await apiCall(`/admin/users/${userId}`, {
-        method: "DELETE",
-      });
+      await apiCall(`/admin/users/${userId}`, "DELETE");
 
-      if (response.ok) {
-        // Remove user from local state
-        setUsers((prev) => prev.filter((user) => user.id !== userId));
-        alert(`User "${username}" has been deleted successfully.`);
-      } else {
-        const errorData = await response.json();
-        alert(`Failed to delete user: ${errorData.detail}`);
-      }
+      // If we get here, the deletion was successful
+      setUsers((prev) => prev.filter((user) => user.id !== userId));
+      alert(`User "${username}" has been deleted successfully.`);
     } catch (error) {
       console.error("Error deleting user:", error);
-      alert("Failed to delete user");
+      alert(`Failed to delete user: ${error.message}`);
     } finally {
       setDeleteLoading((prev) => ({ ...prev, [userId]: false }));
     }
