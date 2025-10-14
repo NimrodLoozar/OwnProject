@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, Form, Input, Button, Alert, Space, Tabs } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const { TabPane } = Tabs;
 
@@ -13,6 +14,7 @@ const Login = () => {
   const [success, setSuccess] = useState("");
   const [activeTab, setActiveTab] = useState("login");
   const { login, register } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = async (values) => {
     const { username, password } = values;
@@ -22,7 +24,8 @@ const Login = () => {
 
     try {
       await login(username, password);
-      // Login successful - the context will handle the state update
+      // Login successful - redirect to dashboard
+      navigate("/");
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
     } finally {

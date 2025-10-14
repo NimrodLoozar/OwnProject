@@ -43,6 +43,11 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
+.users-table td {
+  color: #2d3748;
+  background-color: white;
+}
+
 .users-table th {
   background: #f7fafc;
   font-weight: 600;

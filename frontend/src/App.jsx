@@ -7,7 +7,7 @@ import {
   MenuOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Link, Routes, Route, Navigate } from "react-router-dom";
+import { Link, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -28,6 +28,17 @@ const AppContent = () => {
   const { isAuthenticated, user, logout, userDeleted, isOwner } = useAuth();
   const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const location = useLocation();
+
+  // Function to get selected menu key based on current route
+  const getSelectedKey = () => {
+    const pathname = location.pathname;
+    if (pathname === "/" || pathname === "/dashboard") return "1";
+    if (pathname === "/about") return "2";
+    if (pathname === "/settings") return "3";
+    if (pathname === "/admin/users") return "4";
+    return "1"; // Default to dashboard
+  };
 
   // Redirect to deleted user page if user was deleted
   useEffect(() => {
@@ -106,7 +117,7 @@ const AppContent = () => {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={["1"]}
+            selectedKeys={[getSelectedKey()]}
             items={menuItems}
           />
         </Sider>
@@ -130,7 +141,7 @@ const AppContent = () => {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={["1"]}
+            selectedKeys={[getSelectedKey()]}
             items={menuItems}
             onClick={closeMobileMenu}
             style={{ border: "none", backgroundColor: "#001529" }}

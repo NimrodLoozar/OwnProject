@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import "./AdminUsersPage.css";
 
 const AdminUsersPage = () => {
-  const { apiCall, isOwner } = useAuth();
+  const { apiCall, isOwner, user } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleteLoading, setDeleteLoading] = useState({});
@@ -20,18 +20,30 @@ const AdminUsersPage = () => {
     loadUsers();
   }, []);
 
+  // Debug: Log whenever users state changes
+  useEffect(() => {
+    console.log("🔄 Users state changed:", users);
+    console.log("🔄 Users count:", users.length);
+  }, [users]);
+
   const loadUsers = async () => {
     try {
       setLoading(true);
-      const response = await apiCall("/admin/users");
-      if (response.ok) {
-        const usersData = await response.json();
-        setUsers(usersData);
-      } else {
-        console.error("Failed to load users");
-      }
+      console.log("🔍 Loading users...");
+      console.log("🔑 Current user:", JSON.stringify(user, null, 2));
+      console.log("👑 Is Owner:", isOwner());
+      console.log("🎫 Token exists:", !!localStorage.getItem("access_token"));
+
+      // apiCall returns data directly, not a Response object
+      const usersData = await apiCall("/admin/users", "GET");
+      console.log("👥 Users Data:", usersData);
+      console.log("📈 Number of users:", usersData.length);
+      console.log("🔧 Setting users state...");
+      setUsers(usersData);
+      console.log("✅ Users state set successfully");
     } catch (error) {
-      console.error("Error loading users:", error);
+      console.error("💥 Error loading users:", error);
+      console.error("💥 Error message:", error.message);
     } finally {
       setLoading(false);
     }
@@ -69,18 +81,31 @@ const AdminUsersPage = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    if (!dateString) {
+      return "No date";
+    }
+    try {
+      return new Date(dateString).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (error) {
+      return "Invalid date";
+    }
   };
 
   if (!isOwner()) {
+    console.log("⛔ Access denied - not owner");
     return <div>Access denied. Owner permissions required.</div>;
   }
+
+  // Debug: Log current users state before render
+  console.log("🎨 Rendering AdminUsersPage with users:", users);
+  console.log("🔢 Users array length:", users.length);
+  console.log("📊 Loading state:", loading);
 
   return (
     <div className="admin-users-container">
@@ -106,7 +131,7 @@ const AdminUsersPage = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {users.map((user, index) => (
                 <tr key={user.id}>
                   <td>{user.id}</td>
                   <td>{user.username}</td>

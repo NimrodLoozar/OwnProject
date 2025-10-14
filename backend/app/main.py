@@ -27,7 +27,8 @@ def create_owner_user():
                 hashed_password=hashed_password,
                 role="owner",
                 is_active=True,
-                is_superuser=True
+                is_superuser=True,
+                is_admin=True
             )
             db.add(owner_user)
             db.commit()
@@ -37,6 +38,7 @@ def create_owner_user():
             if existing_owner.role != "owner":
                 existing_owner.role = "owner"
                 existing_owner.is_superuser = True
+                existing_owner.is_admin = True
                 db.commit()
                 print("Existing user updated to owner role")
     finally:
