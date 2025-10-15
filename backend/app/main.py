@@ -79,6 +79,21 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 async def root():
     return {"message": "MyApp Backend API is running!"}
 
+@app.get("/api")
+async def api_root():
+    return {
+        "message": "MyApp Backend API", 
+        "version": "1.0.0",
+        "status": "running",
+        "endpoints": {
+            "auth": "/api/auth",
+            "users": "/api/users", 
+            "admin": "/api/admin",
+            "data": "/api/data",
+            "dashboard": "/api/dashboard"
+        }
+    }
+
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
