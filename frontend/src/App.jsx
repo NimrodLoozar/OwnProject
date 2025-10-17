@@ -6,6 +6,7 @@ import {
   LogoutOutlined,
   MenuOutlined,
   UserOutlined,
+  UserDeleteOutlined,
 } from "@ant-design/icons";
 import { Link, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -16,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import DeletedUserPage from "./pages/DeletedUserPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import OwnerRoute from "./components/OwnerRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -37,6 +39,7 @@ const AppContent = () => {
     if (pathname === "/about") return "2";
     if (pathname === "/settings") return "3";
     if (pathname === "/admin/users") return "4";
+    if (pathname === "/admin/deleted-users") return "5";
     return "1"; // Default to dashboard
   };
 
@@ -74,13 +77,18 @@ const AppContent = () => {
       icon: <SettingOutlined />,
       label: <Link to="/settings">Settings</Link>,
     },
-    // Add admin menu item for owners only
+    // Add admin menu items for owners only
     ...(isOwner()
       ? [
           {
             key: "4",
             icon: <UserOutlined />,
             label: <Link to="/admin/users">Manage Users</Link>,
+          },
+          {
+            key: "5",
+            icon: <UserDeleteOutlined />,
+            label: <Link to="/admin/deleted-users">Deleted Users</Link>,
           },
         ]
       : []),
@@ -154,7 +162,7 @@ const AppContent = () => {
           display: "flex",
           flexDirection: "column",
           marginLeft: isAuthenticated && !isMobile ? 200 : 0,
-          marginTop: "5rem",
+          minHeight: "100vh",
         }}
       >
         {/* Header with mobile menu button */}
@@ -233,20 +241,28 @@ const AppContent = () => {
             <Route
               path="/admin/users"
               element={
-                <ProtectedRoute>
+                <OwnerRoute>
                   <AdminUsersPage />
-                </ProtectedRoute>
+                </OwnerRoute>
+              }
+            />
+            <Route
+              path="/admin/deleted-users"
+              element={
+                <OwnerRoute>
+                  <DeletedUserPage />
+                </OwnerRoute>
               }
             />
           </Routes>
         </Content>
 
         {/* Only show footer when authenticated */}
-        {isAuthenticated && (
+        {/* {isAuthenticated && (
           <Footer style={{ textAlign: "center" }}>
             ©2025 Created with Ant Design
           </Footer>
-        )}
+        )} */}
       </Layout>
     </Layout>
   );

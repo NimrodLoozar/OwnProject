@@ -71,16 +71,7 @@ function Dashboard() {
   }
 
   return (
-    <Card
-      title="Dashboard"
-      className="responsive-card"
-      style={{
-        width: "100%",
-        margin: "20px auto",
-        padding: 0,
-      }}
-      bodyStyle={{ padding: "24px" }}
-    >
+    <Card title="Dashboard" className="responsive-card">
       <div style={{ textAlign: "center" }}>
         <h2 className="responsive-text" style={{ marginBottom: "8px" }}>
           Welcome to your Dashboard, {user?.username}!

@@ -3,6 +3,8 @@ import { Card, Form, Input, Button, Alert, Space, Tabs } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "./login.scss";
+import "../App.scss";
 
 const { TabPane } = Tabs;
 
@@ -58,28 +60,13 @@ const Login = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
-        padding: "20px",
-      }}
-    >
+    <div className="login-page">
       <Card
         title={
           <div style={{ textAlign: "center" }}>
             <h2 className="responsive-text" style={{ margin: 0 }}>
               Welcome to MyApp
             </h2>
-            <p
-              className="responsive-text"
-              style={{ margin: "8px 0 0 0", color: "#666" }}
-            >
-              Please sign in or create an account to continue
-            </p>
           </div>
         }
         className="responsive-card"

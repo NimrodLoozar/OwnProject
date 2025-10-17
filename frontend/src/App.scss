@@ -42,59 +42,61 @@ body {
   .ant-layout {
     background-color: var(--bg-secondary);
   }
-  
+
   .ant-layout-content {
     background: var(--bg-secondary);
   }
-  
+
   .site-content {
     background: var(--bg-primary);
     color: var(--text-primary);
   }
-  
+
   // Card dark theme
   .ant-card {
     background: var(--bg-elevated);
     border-color: var(--border-color);
     color: var(--text-primary);
-    
+
     .ant-card-head {
       background: var(--bg-elevated);
       border-color: var(--border-color);
       color: var(--text-primary);
     }
   }
-  
+
   // Form dark theme
   .ant-form-item-label > label {
     color: var(--text-primary);
   }
-  
+
   // Input dark theme
-  .ant-input, .ant-input-password {
+  .ant-input,
+  .ant-input-password {
     background-color: var(--bg-elevated);
     border-color: var(--border-color);
     color: var(--text-primary);
-    
-    &:focus, &:hover {
-      border-color: #1890ff;
-    }
-  }
-  
-  // Upload dark theme
-  .ant-upload.ant-upload-select {
-    background-color: var(--bg-elevated);
-    border-color: var(--border-color);
-    
+
+    &:focus,
     &:hover {
       border-color: #1890ff;
     }
   }
-  
+
+  // Upload dark theme
+  .ant-upload.ant-upload-select {
+    background-color: var(--bg-elevated);
+    border-color: var(--border-color);
+
+    &:hover {
+      border-color: #1890ff;
+    }
+  }
+
   // Switch dark theme
   .ant-switch {
     background-color: #424242;
-    
+
     &.ant-switch-checked {
       background-color: #1890ff;
     }
@@ -171,8 +173,6 @@ body {
 }
 
 .site-content {
-  margin: 4px;
-  padding: 8px;
   background: #fff;
   min-height: calc(100vh - var(--header-height) - 70px);
   overflow-x: auto;
@@ -194,12 +194,6 @@ body {
   @media (min-width: 769px) and (max-width: 1024px) {
     margin: 12px;
     padding: 16px;
-  }
-
-  // Desktop: full padding
-  @media (min-width: 1025px) {
-    margin: 16px;
-    padding: 24px;
   }
 
   .content-box {

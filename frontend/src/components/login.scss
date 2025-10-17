@@ -1,0 +1,16 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: url("/img/abstract-plexus-blue-geometrical-shapes-connection-ai-generated-image.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 20px;
+
+  h2 {
+    text-align: center;
+    padding: 20px 0;
+  }
+}
