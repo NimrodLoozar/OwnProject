@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     
     class Config:
         env_file = ".env"
+        extra = "ignore"  # Allow extra fields from .env file
     
     def get_allowed_origins(self) -> List[str]:
         """Parse ALLOWED_ORIGINS string into a list"""

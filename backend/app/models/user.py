@@ -15,6 +15,8 @@ class User(Base):
     is_admin = Column(Boolean, default=False)  # Admin flag for user management
     profile_picture = Column(String(255), nullable=True)  # URL or path to profile picture
     theme_preference = Column(String(20), default="system", nullable=False)  # 'light', 'dark', or 'system'
+    deleted_at = Column(DateTime(timezone=True), nullable=True)  # Soft delete timestamp
+    deleted_by = Column(Integer, nullable=True)  # ID of the owner who deleted this user
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

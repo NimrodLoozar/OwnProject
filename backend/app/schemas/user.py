@@ -23,7 +23,16 @@ class User(UserBase):
     is_admin: bool
     profile_picture: Optional[str] = None
     theme_preference: str
+    deleted_at: Optional[datetime] = None
+    deleted_by: Optional[int] = None
     created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+class DeletedUser(User):
+    """Schema for deleted users with additional metadata"""
+    deleted_by_username: Optional[str] = None  # Username of the owner who deleted this user
     
     class Config:
         from_attributes = True

@@ -66,7 +66,10 @@ def verify_token(token: str) -> Optional[str]:
 
 def authenticate_user(db: Session, username: str, password: str):
     """Authenticate user with username and password"""
-    user = db.query(User).filter(User.username == username).first()
+    user = db.query(User).filter(
+        User.username == username,
+        User.deleted_at.is_(None)  # Exclude soft-deleted users
+    ).first()
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -89,7 +92,10 @@ def get_current_user(
     if username is None:
         raise credentials_exception
     
-    user = db.query(User).filter(User.username == username).first()
+    user = db.query(User).filter(
+        User.username == username,
+        User.deleted_at.is_(None)  # Exclude soft-deleted users
+    ).first()
     if user is None:
         raise credentials_exception
     
@@ -111,6 +117,9 @@ def get_current_owner(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 def check_user_exists(db: Session, user_id: int) -> bool:
-    """Check if user exists in database"""
-    user = db.query(User).filter(User.id == user_id).first()
+    """Check if user exists in database and is not soft-deleted"""
+    user = db.query(User).filter(
+        User.id == user_id,
+        User.deleted_at.is_(None)  # Exclude soft-deleted users
+    ).first()
     return user is not None

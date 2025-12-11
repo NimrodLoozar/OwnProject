@@ -76,9 +76,9 @@ function Dashboard() {
         <h2 className="responsive-text" style={{ marginBottom: "8px" }}>
           Welcome to your Dashboard, {user?.username}!
         </h2>
-        <p className="responsive-text" style={{ marginBottom: "8px" }}>
+        {/* <p className="responsive-text" style={{ marginBottom: "8px" }}>
           You have successfully logged in!
-        </p>
+        </p> */}
         <p
           className="responsive-text"
           style={{
@@ -111,7 +111,7 @@ function Dashboard() {
             suffix={saving ? <Spin size="small" /> : null}
           />
 
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => saveQRText(text)}
             loading={saving}
@@ -119,9 +119,9 @@ function Dashboard() {
             style={{ minWidth: "120px" }}
           >
             {saving ? "Saving..." : "Save QR Text"}
-          </Button>
+          </Button> */}
 
-          <p
+          {/* <p
             className="responsive-text"
             style={{
               color: "#666",
@@ -131,7 +131,7 @@ function Dashboard() {
             }}
           >
             Changes are saved automatically
-          </p>
+          </p> */}
         </Space>
       </div>
     </Card>
